@@ -59,6 +59,7 @@ router.post("/login", async (req, res) => {
         status: 200,
         message: "Logged in",
         uuid: check2.uuid,
+        verified: check2.verified,
       });
     }
   } else {
@@ -66,15 +67,19 @@ router.post("/login", async (req, res) => {
       status: 200,
       message: "Logged in",
       uuid: check1.uuid,
+      verified: check1.verified,
     });
   }
 });
 router.post("/createotp", async (req, res) => {
   const random = Math.floor(Math.random() * 8999) + 1000;
   const { uuid } = req.body;
+  console.log(uuid);
   const user = await User.findOne({ uuid });
   if (!user) {
     res.send({ status: 404, message: "User Not Found" });
+  } else if (user.verified) {
+    res.send({ status: 400, message: "User Already Verified" });
   } else {
     user.otp = random;
     user.save();
@@ -88,6 +93,26 @@ router.post("/createotp", async (req, res) => {
       <h2>${random}</h2>`,
     });
     res.send("done");
+  }
+});
+router.post("/get-details", async (req, res) => {
+  const { uuid } = req.body;
+  const usr = await User.findOne({ uuid });
+  if (!usr) {
+    res.send({
+      status: 404,
+      message: "User Not Found",
+    });
+  } else if (usr.verified === false) {
+    res.send({
+      status: 404,
+      message: "User not verified",
+    });
+  } else {
+    res.send({
+      username: usr.username,
+      email: usr.email,
+    });
   }
 });
 router.post("/confirmotp", async (req, res) => {

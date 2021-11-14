@@ -9,7 +9,7 @@ router.post("/signup", async (req, res) => {
   const usr = new User({ username, email, password, uuid });
   const find = await User.findOne({ username });
   if (find) {
-    return res.status(400).send({
+    return res.send({
       error: true,
       status: 400,
       message: "Username Taken",
@@ -17,7 +17,7 @@ router.post("/signup", async (req, res) => {
   }
   const find2 = await User.findOne({ email });
   if (find2) {
-    return res.status(400).send({
+    return res.send({
       error: true,
       status: 400,
       message: "Email Taken",
@@ -26,7 +26,7 @@ router.post("/signup", async (req, res) => {
   usr.save((err) => {
     console.log(err);
     if (err) {
-      res.status(401).send({
+      res.send({
         error: true,
         status: 401,
         message: "Invalid username or email",

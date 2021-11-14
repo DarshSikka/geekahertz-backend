@@ -112,6 +112,7 @@ router.post("/get-details", async (req, res) => {
     res.send({
       username: usr.username,
       email: usr.email,
+      email_verified: usr.verified,
     });
   }
 });

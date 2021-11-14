@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const cors = require("cors");
 const path = require("path");
 const port = process.env.PORT || 5001;
 const auth_routes = require("./auth/router");
@@ -12,6 +13,7 @@ mongoose.connect(process.env.DB_URI, () => {
 });
 const parser = express.json();
 app.use(parser);
+app.use(cors());
 app.use("/api/auth", auth_routes);
 app.use("/api/products", products_routes);
 app.get("/", (req, res) => {
